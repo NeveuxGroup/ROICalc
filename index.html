@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate how much time is wasted on employee communication and how much time can be recovered with text-first communication.">
+    <title>Employee Communication ROI Calculator | OurPeople</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Museo+Sans+Rounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="headline">See what missed employee messages are costing you</h1>
+        </header>
+
+        <main class="calculator-card">
+            <div class="calculator-inputs">
+                <div class="input-group">
+                    <label for="managers" class="input-label">
+                        <span class="label-text">
+                            Number of managers/admins
+                            <button 
+                                type="button" 
+                                class="tooltip-trigger" 
+                                aria-label="What does this mean?"
+                                aria-describedby="managers-tooltip"
+                                tabindex="0"
+                            >
+                                <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
+                            </button>
+                            <span class="tooltip" id="managers-tooltip" role="tooltip">
+                                The number of managers or administrators who send or relay employee communications in your organization
+                            </span>
+                        </span>
+                        <span class="label-value" id="managers-value">5</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="managers" 
+                        name="managers" 
+                        min="1" 
+                        max="50" 
+                        value="5" 
+                        step="1"
+                        class="slider"
+                        aria-label="Number of managers or administrators"
+                    >
+                    <div class="slider-labels">
+                        <span>1</span>
+                        <span>50</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="hours-saved" class="input-label">
+                        <span class="label-text">
+                            Hours saved per manager per week
+                            <button 
+                                type="button" 
+                                class="tooltip-trigger" 
+                                aria-label="How is this calculated?"
+                                aria-describedby="hours-saved-tooltip"
+                                tabindex="0"
+                            >
+                                <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
+                            </button>
+                            <span class="tooltip" id="hours-saved-tooltip" role="tooltip">
+                                Based on OurPeople research data, managers save an average of 1 hour per week when switching to text-first communication. This comes from reduced follow-ups, repeated reminders, and clarification time.
+                            </span>
+                        </span>
+                        <span class="label-value" id="hours-saved-value">1.0</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="hours-saved" 
+                        name="hoursSavedPerManagerPerWeek" 
+                        min="0.5" 
+                        max="1.5" 
+                        value="1.0" 
+                        step="0.1"
+                        class="slider"
+                        aria-label="Hours saved per manager per week"
+                    >
+                    <div class="slider-labels">
+                        <span>0.5</span>
+                        <span>1.5</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="hourly-cost" class="input-label">
+                        <span class="label-text">
+                            Fully loaded hourly cost
+                            <button 
+                                type="button" 
+                                class="tooltip-trigger" 
+                                aria-label="What is fully loaded hourly cost?"
+                                aria-describedby="hourly-cost-tooltip"
+                                tabindex="0"
+                            >
+                                <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
+                            </button>
+                            <span class="tooltip" id="hourly-cost-tooltip" role="tooltip">
+                                Fully loaded cost includes salary, benefits, and overhead expenses
+                            </span>
+                        </span>
+                        <span class="label-value" id="hourly-cost-value">$50</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="hourly-cost" 
+                        name="hourlyManagerCost" 
+                        min="20" 
+                        max="200" 
+                        value="50" 
+                        step="5"
+                        class="slider"
+                        aria-label="Fully loaded hourly cost"
+                    >
+                    <div class="slider-labels">
+                        <span>$20</span>
+                        <span>$200</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calculator-results">
+                <div class="results-section">
+                    <div class="result-primary">
+                        <div class="result-label">Hours saved per month</div>
+                        <div class="result-value" id="hours-saved-result">21.7</div>
+                    </div>
+                    <div class="result-secondary">
+                        <div class="result-label-small">Estimated labor value of time saved</div>
+                        <div class="result-value-small" id="cost-saved-result">$1,083</div>
+                    </div>
+                </div>
+
+                <div class="context-section">
+                    <div class="context-label">Message reach rates (context only)</div>
+                    <div class="reach-comparison">
+                        <div class="reach-bar-container">
+                            <div class="reach-bar-label">Traditional methods (email, intranet, paper)</div>
+                            <div class="reach-bar">
+                                <div class="reach-bar-fill" style="width: 30%;" data-rate="30%"></div>
+                                <span class="reach-bar-text">30%</span>
+                            </div>
+                        </div>
+                        <div class="reach-bar-container">
+                            <div class="reach-bar-label">Text-first approach</div>
+                            <div class="reach-bar">
+                                <div class="reach-bar-fill text-first" style="width: 90%;" data-rate="90%"></div>
+                                <span class="reach-bar-text">90%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="context-explanation">Text-first messaging reaches more employees, reducing the need for follow-ups and repeated reminders.</p>
+                </div>
+
+                <button class="cta-button" id="get-started-btn" aria-label="Get started with OurPeople">
+                    Get Started
+                </button>
+            </div>
+        </main>
+
+        <section class="methodology-section">
+            <h2 class="methodology-title">How we calculate these numbers</h2>
+            <div class="methodology-content">
+                <p class="methodology-intro">Our calculations are based on conservative estimates of time saved when managers move from traditional communication methods to text-first messaging.</p>
+                
+                <div class="methodology-details">
+                    <div class="methodology-item">
+                        <h3 class="methodology-item-title">Time savings source</h3>
+                        <p>Time savings come from reduced follow-ups, repeated reminders, and clarification when messages are delivered directly by text instead of email, intranet, paper, or manager relay.</p>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <h3 class="methodology-item-title">Conservative estimate</h3>
+                        <p>We estimate 0.5–1.5 hours saved per manager per week. This is a conservative range based on reduced communication overhead.</p>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <h3 class="methodology-item-title">Monthly calculation</h3>
+                        <p class="methodology-formula">
+                            <strong>Hours saved per month</strong> = Managers × Hours saved per manager per week × 4.33 weeks per month
+                        </p>
+                    </div>
+                    
+                    <div class="methodology-item">
+                        <h3 class="methodology-item-title">Cost calculation</h3>
+                        <p class="methodology-formula">
+                            <strong>Estimated labor value</strong> = Hours saved per month × Fully loaded hourly cost
+                        </p>
+                        <p class="methodology-note">This represents the labor value of time recovered, not additional revenue generated.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="turnover-context">
+            <p>Poor communication is a known contributor to disengagement and turnover. Replacement costs for frontline roles are often estimated at ~30–40% of salary.</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay" aria-hidden="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+            <h2 id="modal-title" class="modal-title">Get Started</h2>
+            <form id="lead-form" class="lead-form">
+                <div class="form-group">
+                    <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName" 
+                        required 
+                        class="form-input"
+                        aria-required="true"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="email" class="form-label">Email <span class="required">*</span></label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        class="form-input"
+                        aria-required="true"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="company" class="form-label">Company <span class="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="company" 
+                        name="company" 
+                        required 
+                        class="form-input"
+                        aria-required="true"
+                    >
+                </div>
+                <!-- Honeypot field -->
+                <div class="form-group honeypot" style="position: absolute; left: -9999px; opacity: 0;">
+                    <label for="website" class="form-label">Website</label>
+                    <input 
+                        type="text" 
+                        id="website" 
+                        name="website" 
+                        tabindex="-1"
+                        autocomplete="off"
+                        aria-hidden="true"
+                    >
+                </div>
+                <div id="form-error" class="form-error" role="alert" aria-live="polite"></div>
+                <button type="submit" class="form-submit">Submit</button>
+            </form>
+            <div id="form-success" class="form-success" role="alert" aria-live="polite" style="display: none;">
+                <p>Thanks! We'll review your results and help you get set up in OurPeople.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
