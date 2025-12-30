@@ -6,10 +6,19 @@ const WEEKS_PER_MONTH = 4.33;
 const managersSlider = document.getElementById('managers');
 const hoursSavedSlider = document.getElementById('hours-saved');
 const hourlyCostSlider = document.getElementById('hourly-cost');
+const traditionalReachSlider = document.getElementById('traditional-reach');
+const textFirstReachSlider = document.getElementById('textfirst-reach');
 
 const managersValue = document.getElementById('managers-value');
 const hoursSavedValue = document.getElementById('hours-saved-value');
 const hourlyCostValue = document.getElementById('hourly-cost-value');
+const traditionalReachValue = document.getElementById('traditional-reach-value');
+const traditionalReachBar = document.getElementById('traditional-reach-bar');
+const traditionalReachText = document.getElementById('traditional-reach-text');
+const textFirstReachValue = document.getElementById('textfirst-reach-value');
+const textFirstReachBar = document.getElementById('textfirst-reach-bar');
+const textFirstReachText = document.getElementById('textfirst-reach-text');
+const improvementMetrics = document.getElementById('improvement-metrics');
 
 const hoursSavedResult = document.getElementById('hours-saved-result');
 const costSavedResult = document.getElementById('cost-saved-result');
@@ -22,12 +31,20 @@ const formError = document.getElementById('form-error');
 const formSuccess = document.getElementById('form-success');
 const methodologyToggle = document.getElementById('methodology-toggle');
 const methodologyContent = document.getElementById('methodology-content');
+const employeesSlider = document.getElementById('employees');
+const employeesValue = document.getElementById('employees-value');
+const employeeCountSlider = document.getElementById('employee-count');
+const employeeCountValue = document.getElementById('employee-count-value');
+const employeeNarrative = document.getElementById('employee-narrative');
+const employeeCountNarrative = document.getElementById('employee-count-narrative');
 
 // Calculator State
 let calculatorState = {
   managers: 5,
   hoursSavedPerManagerPerWeek: 1.0,
-  hourlyManagerCost: 50
+  hourlyManagerCost: 50,
+  traditionalReach: 30,
+  textFirstReach: 90
 };
 
 // Initialize calculator
@@ -40,6 +57,17 @@ function initCalculator() {
   managersSlider.addEventListener('input', handleManagersChange);
   hoursSavedSlider.addEventListener('input', handleHoursSavedChange);
   hourlyCostSlider.addEventListener('input', handleHourlyCostChange);
+  
+  // Reach slider listeners
+  if (traditionalReachSlider) {
+    traditionalReachSlider.addEventListener('input', handleTraditionalReachChange);
+  }
+  if (textFirstReachSlider) {
+    textFirstReachSlider.addEventListener('input', handleTextFirstReachChange);
+  }
+  
+  // Initialize reach display
+  updateReachDisplay();
   
   // Modal handlers
   getStartedBtn.addEventListener('click', openModal);
@@ -59,65 +87,143 @@ function initCalculator() {
   if (methodologyToggle) {
     methodologyToggle.addEventListener('click', toggleMethodology);
   }
+  
+  // Employee slider handler (form)
+  if (employeesSlider && employeesValue) {
+    employeesSlider.addEventListener('input', handleEmployeesChange);
+    updateEmployeesValue();
+  }
+  
+  // Employee count slider handler (context section)
+  if (employeeCountSlider && employeeCountValue) {
+    employeeCountSlider.addEventListener('input', handleEmployeeCountChange);
+    updateEmployeeCountDisplay();
+  }
+}
+
+// Update employee tier display
+function updateEmployeesValue() {
+  if (!employeesSlider || !employeesValue) return;
+  const employeeTiers = ['<100', '100-500', '500-1K', '1K-5K', '5K+'];
+  const value = parseInt(employeesSlider.value, 10);
+  employeesValue.textContent = employeeTiers[value - 1] || '100-500';
+}
+
+function handleEmployeesChange(e) {
+  updateEmployeesValue();
+}
+
+// Update employee count display (context section)
+function updateEmployeeCountDisplay() {
+  if (!employeeCountSlider || !employeeCountValue) return;
+  const employeeTiers = ['<100', '100-500', '500-1K', '1K-5K', '5K+'];
+  const value = parseInt(employeeCountSlider.value, 10);
+  const tier = employeeTiers[value - 1] || '100-500';
+  employeeCountValue.textContent = tier;
+  if (employeeCountNarrative) {
+    employeeCountNarrative.textContent = tier.toLowerCase();
+  }
+}
+
+function handleEmployeeCountChange(e) {
+  updateEmployeeCountDisplay();
 }
 
 // Initialize tooltips
 function initTooltips() {
   const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+  let tooltipTimeout = null;
+  
+  function hideTooltip(trigger, tooltip) {
+    trigger.classList.remove('active');
+    tooltip.style.display = '';
+  }
+  
+  function showTooltip(trigger, tooltip) {
+    // Close any other open tooltips
+    document.querySelectorAll('.tooltip-trigger').forEach(t => {
+      if (t !== trigger) {
+        const otherTooltipId = t.getAttribute('aria-describedby');
+        if (otherTooltipId) {
+          const otherTooltip = document.getElementById(otherTooltipId);
+          if (otherTooltip) hideTooltip(t, otherTooltip);
+        }
+      }
+    });
+    
+    // Clear any existing timeout
+    if (tooltipTimeout) {
+      clearTimeout(tooltipTimeout);
+    }
+    
+    // Show this tooltip
+    trigger.classList.add('active');
+    tooltip.style.display = 'block';
+    
+    // Auto-hide after 4 seconds
+    tooltipTimeout = setTimeout(() => {
+      hideTooltip(trigger, tooltip);
+    }, 4000);
+  }
   
   tooltipTriggers.forEach(trigger => {
-    // Find the tooltip - it's a sibling element, not a child
+    // Find the tooltip
     const tooltipId = trigger.getAttribute('aria-describedby');
-    const tooltip = tooltipId ? document.getElementById(tooltipId) : trigger.nextElementSibling;
+    const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
     
     if (!tooltip) {
       console.warn('Tooltip not found for trigger', trigger);
       return;
     }
     
-    // Handle click for mobile/touch devices
+    // Handle click - show tooltip
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      
-      const isActive = this.classList.contains('active');
-      
-      // Close all tooltips first
-      document.querySelectorAll('.tooltip-trigger').forEach(t => {
-        t.classList.remove('active');
-      });
-      
-      // Toggle this tooltip
-      if (!isActive) {
-        this.classList.add('active');
-      }
+      showTooltip(this, tooltip);
     });
     
-    // Handle hover for desktop
+    // Handle hover for desktop - show on hover, hide on leave
     trigger.addEventListener('mouseenter', function() {
-      this.classList.add('active');
+      showTooltip(this, tooltip);
     });
     
     trigger.addEventListener('mouseleave', function() {
-      this.classList.remove('active');
+      hideTooltip(this, tooltip);
+      if (tooltipTimeout) {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = null;
+      }
     });
     
     // Handle focus for keyboard navigation
     trigger.addEventListener('focus', function() {
-      this.classList.add('active');
+      showTooltip(this, tooltip);
     });
     
     trigger.addEventListener('blur', function() {
-      this.classList.remove('active');
+      hideTooltip(this, tooltip);
+      if (tooltipTimeout) {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = null;
+      }
     });
   });
   
   // Close tooltips when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.tooltip-trigger') && !e.target.closest('.tooltip')) {
-      document.querySelectorAll('.tooltip-trigger').forEach(t => {
-        t.classList.remove('active');
+      tooltipTriggers.forEach(t => {
+        const tooltipId = t.getAttribute('aria-describedby');
+        if (tooltipId) {
+          const tooltip = document.getElementById(tooltipId);
+          if (tooltip) hideTooltip(t, tooltip);
+        }
       });
+      if (tooltipTimeout) {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = null;
+      }
     }
   });
 }
@@ -146,6 +252,58 @@ function handleHourlyCostChange(e) {
   calculatorState.hourlyManagerCost = parseInt(e.target.value, 10);
   updateSliderValues();
   calculateResults();
+}
+
+function handleTraditionalReachChange(e) {
+  calculatorState.traditionalReach = parseInt(e.target.value, 10);
+  updateReachDisplay();
+}
+
+function handleTextFirstReachChange(e) {
+  calculatorState.textFirstReach = parseInt(e.target.value, 10);
+  updateReachDisplay();
+}
+
+// Update reach display
+function updateReachDisplay() {
+  if (!traditionalReachValue || !textFirstReachValue) return;
+  
+  const traditional = calculatorState.traditionalReach;
+  const textFirst = calculatorState.textFirstReach;
+  
+  // Update values
+  traditionalReachValue.textContent = `${traditional}%`;
+  textFirstReachValue.textContent = `${textFirst}%`;
+  
+  // Update bars
+  if (traditionalReachBar) {
+    traditionalReachBar.style.width = `${traditional}%`;
+  }
+  if (traditionalReachText) {
+    traditionalReachText.textContent = `${traditional}%`;
+  }
+  if (textFirstReachBar) {
+    textFirstReachBar.style.width = `${textFirst}%`;
+  }
+  if (textFirstReachText) {
+    textFirstReachText.textContent = `${textFirst}%`;
+  }
+  
+  // Calculate and display improvement metrics
+  if (improvementMetrics) {
+    const percentagePoints = textFirst - traditional;
+    const multiplier = (textFirst / traditional).toFixed(1);
+    improvementMetrics.innerHTML = `<span class="improvement-badge">+${percentagePoints} percentage points (${multiplier}x)</span>`;
+  }
+}
+
+// Initialize reach display on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(updateReachDisplay, 100);
+  });
+} else {
+  setTimeout(updateReachDisplay, 100);
 }
 
 // Calculate ROI results
@@ -214,13 +372,15 @@ async function handleFormSubmit(e) {
   
   // Get form data
   const formData = new FormData(leadForm);
-  const firstName = formData.get('firstName').trim();
+  const fullName = formData.get('fullName').trim();
   const email = formData.get('email').trim();
+  const mobile = formData.get('mobile').trim();
   const company = formData.get('company').trim();
+  const employees = formData.get('employees');
   const website = formData.get('website').trim(); // Honeypot
   
   // Validate required fields
-  if (!firstName || !email || !company) {
+  if (!fullName || !email || !mobile || !company) {
     showError('Please fill in all required fields.');
     return;
   }
@@ -231,6 +391,17 @@ async function handleFormSubmit(e) {
     showError('Please enter a valid email address.');
     return;
   }
+  
+  // Validate mobile format (basic validation)
+  const mobileRegex = /^[\d\s\(\)\-\+]+$/;
+  if (!mobileRegex.test(mobile) || mobile.replace(/\D/g, '').length < 10) {
+    showError('Please enter a valid mobile number.');
+    return;
+  }
+  
+  // Map employee slider value to tier
+  const employeeTiers = ['<100', '100-500', '500-1K', '1K-5K', '5K+'];
+  const employeeTier = employeeTiers[parseInt(employees, 10) - 1] || '100-500';
   
   // Check honeypot (if filled, treat as spam but show success)
   if (website) {
@@ -255,9 +426,11 @@ async function handleFormSubmit(e) {
     
     // Prepare webhook payload
     const payload = {
-      firstName,
+      fullName,
       email,
+      mobile,
       company,
+      employeeTier,
       managers: calculatorState.managers,
       hoursSavedPerManagerPerWeek: calculatorState.hoursSavedPerManagerPerWeek,
       hourlyManagerCost: calculatorState.hourlyManagerCost,

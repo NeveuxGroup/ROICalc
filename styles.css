@@ -142,6 +142,7 @@ body {
   gap: 0.5rem;
   position: relative;
   flex-wrap: wrap;
+  z-index: 1;
 }
 
 /* Tooltip */
@@ -177,13 +178,13 @@ body {
 
 .tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 12px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(0.95);
   background: var(--color-navy);
   color: var(--color-simple-white);
-  padding: 0.625rem 0.875rem;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   font-size: 0.8125rem;
   font-weight: 400;
   white-space: normal;
@@ -191,12 +192,13 @@ body {
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s 0.2s;
   visibility: hidden;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   max-width: 280px;
   min-width: 200px;
   text-align: left;
   line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .tooltip a {
@@ -225,7 +227,7 @@ body {
 .tooltip-trigger.active .tooltip {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) scale(1);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
   pointer-events: auto;
 }
@@ -395,6 +397,26 @@ body {
   border-top: 1px solid rgba(40, 75, 82, 0.1);
 }
 
+/* Employee Context Section */
+.employee-context-section {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f4 100%);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(40, 75, 82, 0.06);
+}
+
+.reach-slider {
+  margin-bottom: var(--spacing-xs);
+}
+
+.improvement-metrics {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-left: var(--spacing-xs);
+}
+
 .reach-comparison {
   display: flex;
   flex-direction: column;
@@ -438,7 +460,8 @@ body {
   padding: 0.125rem 0.5rem;
   border-radius: 12px;
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
+  display: inline-block;
 }
 
 .reach-bar {
@@ -763,6 +786,12 @@ body {
   gap: var(--spacing-xs);
 }
 
+.form-group .label-value {
+  color: var(--color-real-teal);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
 .form-label {
   font-weight: 500;
   color: var(--color-navy);
@@ -875,8 +904,9 @@ body {
   .calculator-card {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-lg);
     align-items: start;
+    padding: var(--spacing-lg);
   }
   
   .calculator-inputs {
@@ -887,11 +917,19 @@ body {
     border-top: none;
     border-left: 2px solid rgba(40, 75, 82, 0.08);
     padding-top: 0;
-    padding-left: var(--spacing-xl);
+    padding-left: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
   }
   
   .results-section {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: 0;
+  }
+  
+  .context-section,
+  .employee-context-section {
+    margin-bottom: var(--spacing-md);
   }
   
   .methodology-details {

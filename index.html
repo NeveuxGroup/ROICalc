@@ -93,23 +93,23 @@
                 <div class="input-group">
                     <label for="hourly-cost" class="input-label">
                         <span class="label-text">
-                            Fully loaded hourly cost
+                            Manager hourly cost
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
-                                aria-label="What is fully loaded hourly cost and why $50?"
+                                aria-label="What is manager hourly cost and why $50?"
                                 aria-describedby="hourly-cost-tooltip"
                                 tabindex="0"
                             >
                                 <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
                             </button>
                             <span class="tooltip" id="hourly-cost-tooltip" role="tooltip">
-                                Fully loaded cost includes salary, benefits, and overhead expenses for the managers and administrators who send messages. We use $50/hour as a conservative default, which represents a typical mid-level manager's fully loaded cost. Adjust this to match your organization's actual costs for these roles.
+                                Manager hourly cost includes salary, benefits, and overhead expenses for the managers and administrators who send messages. We use $50/hour as a conservative default, which represents a typical mid-level manager's fully loaded cost. Adjust this to match your organization's actual costs for these roles.
                             </span>
                         </span>
                         <span class="label-value" id="hourly-cost-value">$50</span>
                     </label>
-                    <input 
+                        <input 
                         type="range" 
                         id="hourly-cost" 
                         name="hourlyManagerCost" 
@@ -118,7 +118,7 @@
                         value="50" 
                         step="5"
                         class="slider"
-                        aria-label="Fully loaded hourly cost"
+                        aria-label="Manager hourly cost"
                     >
                     <div class="slider-labels">
                         <span>$20</span>
@@ -134,36 +134,90 @@
                         <div class="result-value" id="hours-saved-result">21.7</div>
                     </div>
                     <div class="result-secondary">
-                        <div class="result-label-small">Estimated labor value of time saved</div>
+                        <div class="result-label-small">Manager salary saved</div>
                         <div class="result-value-small" id="cost-saved-result">$1,083</div>
                     </div>
                 </div>
 
                 <div class="context-section">
-                    <div class="context-label">Message reach rates</div>
+                    <div class="context-label">Message visibility (context only)</div>
                     <div class="reach-comparison">
                         <div class="reach-bar-container">
                             <div class="reach-bar-label">
                                 <span>Traditional methods (email, intranet, paper)</span>
-                                <span class="reach-percentage">30%</span>
+                                <span class="reach-percentage" id="traditional-reach-value">30%</span>
                             </div>
+                            <input 
+                                type="range" 
+                                id="traditional-reach" 
+                                name="traditionalReach" 
+                                min="10" 
+                                max="60" 
+                                value="30" 
+                                step="5"
+                                class="slider reach-slider"
+                                aria-label="Traditional methods reach percentage"
+                            >
                             <div class="reach-bar">
-                                <div class="reach-bar-fill" style="width: 30%;" data-rate="30%"></div>
-                                <span class="reach-bar-text">30%</span>
+                                <div class="reach-bar-fill" id="traditional-reach-bar" style="width: 30%;"></div>
+                                <span class="reach-bar-text" id="traditional-reach-text">30%</span>
                             </div>
                         </div>
                         <div class="reach-bar-container">
                             <div class="reach-bar-label">
                                 <span>Text-first approach</span>
-                                <span class="reach-percentage improvement">98% <span class="improvement-badge">+227% better</span></span>
+                                <span class="reach-percentage improvement" id="textfirst-reach-display">
+                                    <span id="textfirst-reach-value">90%</span>
+                                    <span class="improvement-metrics" id="improvement-metrics"></span>
+                                </span>
                             </div>
+                            <input 
+                                type="range" 
+                                id="textfirst-reach" 
+                                name="textFirstReach" 
+                                min="70" 
+                                max="98" 
+                                value="90" 
+                                step="2"
+                                class="slider reach-slider"
+                                aria-label="Text-first approach reach percentage"
+                            >
                             <div class="reach-bar">
-                                <div class="reach-bar-fill text-first" style="width: 98%;" data-rate="98%"></div>
-                                <span class="reach-bar-text">98%</span>
+                                <div class="reach-bar-fill text-first" id="textfirst-reach-bar" style="width: 90%;"></div>
+                                <span class="reach-bar-text" id="textfirst-reach-text">90%</span>
                             </div>
                         </div>
                     </div>
-                    <p class="context-explanation">Text-first messaging reaches more employees, reducing the need for follow-ups and repeated reminders.</p>
+                    <p class="context-explanation">Text-first visibility is typically much higher than email/intranet for hourly teams. This is context only and does not affect ROI math.</p>
+                </div>
+
+                <div class="employee-context-section">
+                    <div class="context-label">Employee reach context (not included in ROI calculations)</div>
+                    <div class="form-group">
+                        <label for="employee-count" class="input-label">
+                            <span class="label-text">Employees receiving messages</span>
+                            <span class="label-value" id="employee-count-value">100-500</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="employee-count" 
+                            name="employeeCount" 
+                            min="1" 
+                            max="5" 
+                            value="2" 
+                            step="1"
+                            class="slider"
+                            aria-label="Employees receiving messages"
+                        >
+                        <div class="slider-labels">
+                            <span>&lt;100</span>
+                            <span>100-500</span>
+                            <span>500-1K</span>
+                            <span>1K-5K</span>
+                            <span>5K+</span>
+                        </div>
+                    </div>
+                    <p class="context-explanation" id="employee-narrative">Reaching <span id="employee-count-narrative">100-500</span> hourly employees by email/intranet often takes hours or multiple shifts. Text-first reaches most employees within minutes.</p>
                 </div>
 
                 <button class="cta-button" id="get-started-btn" aria-label="Get started with OurPeople">
@@ -192,7 +246,7 @@
                     
                     <div class="methodology-item">
                         <h3 class="methodology-item-title">Conservative estimate</h3>
-                        <p>We estimate 0.5–1.5 hours saved per manager per week. This is a conservative range based on reduced communication overhead.</p>
+                        <p>Time saved is a conservative planning estimate and is user-adjustable. We default to 1 hour saved per manager per week (range: 0.5–1.5 hours), representing time recovered from reduced communication overhead. Actual results vary based on your organization's communication patterns.</p>
                     </div>
                     
                     <div class="methodology-item">
@@ -205,9 +259,9 @@
                     <div class="methodology-item">
                         <h3 class="methodology-item-title">Cost calculation</h3>
                         <p class="methodology-formula">
-                            <strong>Estimated labor value</strong> = Hours saved per month × Fully loaded hourly cost
+                            <strong>Manager salary saved</strong> = Hours saved per month × Manager hourly cost
                         </p>
-                        <p class="methodology-note">This represents the labor value of time recovered, not additional revenue generated.</p>
+                        <p class="methodology-note">This represents the manager salary value of time recovered, not additional revenue generated.</p>
                     </div>
                 </div>
             </div>
@@ -225,11 +279,11 @@
             <h2 id="modal-title" class="modal-title">Get Started</h2>
             <form id="lead-form" class="lead-form">
                 <div class="form-group">
-                    <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                    <label for="fullName" class="form-label">Full Name <span class="required">*</span></label>
                     <input 
                         type="text" 
-                        id="firstName" 
-                        name="firstName" 
+                        id="fullName" 
+                        name="fullName" 
                         required 
                         class="form-input"
                         aria-required="true"
@@ -247,6 +301,18 @@
                     >
                 </div>
                 <div class="form-group">
+                    <label for="mobile" class="form-label">Mobile Number <span class="required">*</span></label>
+                    <input 
+                        type="tel" 
+                        id="mobile" 
+                        name="mobile" 
+                        required 
+                        class="form-input"
+                        aria-required="true"
+                        placeholder="(555) 123-4567"
+                    >
+                </div>
+                <div class="form-group">
                     <label for="company" class="form-label">Company <span class="required">*</span></label>
                     <input 
                         type="text" 
@@ -256,6 +322,30 @@
                         class="form-input"
                         aria-required="true"
                     >
+                </div>
+                <div class="form-group">
+                    <label for="employees" class="form-label">
+                        <span>Approximate number of employees</span>
+                        <span class="label-value" id="employees-value">100-500</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="employees" 
+                        name="employees" 
+                        min="1" 
+                        max="5" 
+                        value="2" 
+                        step="1"
+                        class="slider"
+                        aria-label="Approximate number of employees"
+                    >
+                    <div class="slider-labels">
+                        <span>&lt;100</span>
+                        <span>100-500</span>
+                        <span>500-1K</span>
+                        <span>1K-5K</span>
+                        <span>5K+</span>
+                    </div>
                 </div>
                 <!-- Honeypot field -->
                 <div class="form-group honeypot" style="position: absolute; left: -9999px; opacity: 0;">
