@@ -140,17 +140,23 @@
                 </div>
 
                 <div class="context-section">
-                    <div class="context-label">Message reach rates (context only)</div>
+                    <div class="context-label">Message reach rates</div>
                     <div class="reach-comparison">
                         <div class="reach-bar-container">
-                            <div class="reach-bar-label">Traditional methods (email, intranet, paper)</div>
+                            <div class="reach-bar-label">
+                                <span>Traditional methods (email, intranet, paper)</span>
+                                <span class="reach-percentage">30%</span>
+                            </div>
                             <div class="reach-bar">
                                 <div class="reach-bar-fill" style="width: 30%;" data-rate="30%"></div>
                                 <span class="reach-bar-text">30%</span>
                             </div>
                         </div>
                         <div class="reach-bar-container">
-                            <div class="reach-bar-label">Text-first approach</div>
+                            <div class="reach-bar-label">
+                                <span>Text-first approach</span>
+                                <span class="reach-percentage improvement">90% <span class="improvement-badge">+200% better</span></span>
+                            </div>
                             <div class="reach-bar">
                                 <div class="reach-bar-fill text-first" style="width: 90%;" data-rate="90%"></div>
                                 <span class="reach-bar-text">90%</span>
@@ -166,9 +172,16 @@
             </div>
         </main>
 
+        <div class="turnover-context">
+            <p>Poor communication is a known contributor to disengagement and turnover. Replacement costs for frontline roles are often estimated at ~30–40% of salary.</p>
+        </div>
+
         <section class="methodology-section">
-            <h2 class="methodology-title">How we calculate these numbers</h2>
-            <div class="methodology-content">
+            <button class="methodology-toggle" id="methodology-toggle" aria-expanded="false" aria-controls="methodology-content">
+                <h2 class="methodology-title">How do we calculate these numbers?</h2>
+                <span class="methodology-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="methodology-content" id="methodology-content" aria-hidden="true">
                 <p class="methodology-intro">Our calculations are based on conservative estimates of time saved when managers move from traditional communication methods to text-first messaging.</p>
                 
                 <div class="methodology-details">
@@ -199,10 +212,6 @@
                 </div>
             </div>
         </section>
-
-        <div class="turnover-context">
-            <p>Poor communication is a known contributor to disengagement and turnover. Replacement costs for frontline roles are often estimated at ~30–40% of salary.</p>
-        </div>
     </div>
 
     <!-- Modal -->

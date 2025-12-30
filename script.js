@@ -20,6 +20,8 @@ const modalClose = document.getElementById('modal-close');
 const leadForm = document.getElementById('lead-form');
 const formError = document.getElementById('form-error');
 const formSuccess = document.getElementById('form-success');
+const methodologyToggle = document.getElementById('methodology-toggle');
+const methodologyContent = document.getElementById('methodology-content');
 
 // Calculator State
 let calculatorState = {
@@ -52,6 +54,11 @@ function initCalculator() {
   
   // Tooltip handlers
   initTooltips();
+  
+  // Methodology toggle handler
+  if (methodologyToggle) {
+    methodologyToggle.addEventListener('click', toggleMethodology);
+  }
 }
 
 // Initialize tooltips
@@ -59,34 +66,52 @@ function initTooltips() {
   const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
   
   tooltipTriggers.forEach(trigger => {
+    const tooltip = trigger.querySelector('.tooltip');
+    
     // Handle click for mobile/touch devices
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      const tooltip = this.querySelector('.tooltip');
-      const isVisible = tooltip.style.opacity === '1';
+      
+      const isActive = this.classList.contains('active');
       
       // Close all tooltips first
-      document.querySelectorAll('.tooltip').forEach(t => {
-        t.style.opacity = '0';
-        t.style.pointerEvents = 'none';
+      document.querySelectorAll('.tooltip-trigger').forEach(t => {
+        t.classList.remove('active');
       });
       
       // Toggle this tooltip
-      if (!isVisible) {
-        tooltip.style.opacity = '1';
-        tooltip.style.pointerEvents = 'auto';
+      if (!isActive) {
+        this.classList.add('active');
       }
     });
     
-    // Close tooltip when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!trigger.contains(e.target)) {
-        const tooltip = trigger.querySelector('.tooltip');
-        tooltip.style.opacity = '0';
-        tooltip.style.pointerEvents = 'none';
-      }
+    // Handle hover for desktop
+    trigger.addEventListener('mouseenter', function() {
+      this.classList.add('active');
     });
+    
+    trigger.addEventListener('mouseleave', function() {
+      this.classList.remove('active');
+    });
+    
+    // Handle focus for keyboard navigation
+    trigger.addEventListener('focus', function() {
+      this.classList.add('active');
+    });
+    
+    trigger.addEventListener('blur', function() {
+      this.classList.remove('active');
+    });
+  });
+  
+  // Close tooltips when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.tooltip-trigger') && !e.target.closest('.tooltip')) {
+      document.querySelectorAll('.tooltip-trigger').forEach(t => {
+        t.classList.remove('active');
+      });
+    }
   });
 }
 
@@ -284,6 +309,15 @@ function showSuccess() {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit';
   }
+}
+
+// Toggle methodology section
+function toggleMethodology() {
+  const isExpanded = methodologyToggle.getAttribute('aria-expanded') === 'true';
+  const newState = !isExpanded;
+  
+  methodologyToggle.setAttribute('aria-expanded', newState);
+  methodologyContent.setAttribute('aria-hidden', !newState);
 }
 
 // Initialize when DOM is ready
