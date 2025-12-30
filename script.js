@@ -26,8 +26,6 @@ const employeesSlider = document.getElementById('employees');
 const employeesValue = document.getElementById('employees-value');
 const employeeCountSlider = document.getElementById('employee-count');
 const employeeCountValue = document.getElementById('employee-count-value');
-const employeeNarrative = document.getElementById('employee-narrative');
-const employeeCountNarrative = document.getElementById('employee-count-narrative');
 
 // Calculator State
 let calculatorState = {
@@ -36,6 +34,11 @@ let calculatorState = {
   hourlyManagerCost: 50,
   employeeCountTier: 2 // 1=<100, 2=100-500, 3=500-1K, 4=1K-5K, 5=5K+
 };
+
+// Initialize calculator state with employee count
+if (employeeCountSlider) {
+  calculatorState.employeeCountTier = parseInt(employeeCountSlider.value, 10) || 2;
+}
 
 // Initialize calculator
 function initCalculator() {
@@ -73,14 +76,9 @@ function initCalculator() {
     updateEmployeesValue();
   }
   
-  // Employee count slider handler (context section)
+  // Employee count slider handler
   if (employeeCountSlider && employeeCountValue) {
     employeeCountSlider.addEventListener('input', handleEmployeeCountChange);
-    updateEmployeeCountDisplay();
-  }
-  
-  // Initialize employee count display
-  if (employeeCountSlider) {
     updateEmployeeCountDisplay();
   }
 }
@@ -97,16 +95,13 @@ function handleEmployeesChange(e) {
   updateEmployeesValue();
 }
 
-// Update employee count display (context section)
+// Update employee count display
 function updateEmployeeCountDisplay() {
   if (!employeeCountSlider || !employeeCountValue) return;
   const employeeTiers = ['<100', '100-500', '500-1K', '1K-5K', '5K+'];
   const value = parseInt(employeeCountSlider.value, 10);
   const tier = employeeTiers[value - 1] || '100-500';
   employeeCountValue.textContent = tier;
-  if (employeeCountNarrative) {
-    employeeCountNarrative.textContent = tier.toLowerCase();
-  }
   
   // Update calculator state and recalculate
   calculatorState.employeeCountTier = value;
@@ -120,6 +115,8 @@ function updateEmployeeCountDisplay() {
 }
 
 function handleEmployeeCountChange(e) {
+  const value = parseInt(e.target.value, 10);
+  calculatorState.employeeCountTier = value;
   updateEmployeeCountDisplay();
 }
 
@@ -130,6 +127,8 @@ function initTooltips() {
   
   function hideTooltip(trigger, tooltip) {
     trigger.classList.remove('active');
+    tooltip.style.opacity = '0';
+    tooltip.style.visibility = 'hidden';
     tooltip.style.display = '';
   }
   
@@ -140,7 +139,12 @@ function initTooltips() {
         const otherTooltipId = t.getAttribute('aria-describedby');
         if (otherTooltipId) {
           const otherTooltip = document.getElementById(otherTooltipId);
-          if (otherTooltip) hideTooltip(t, otherTooltip);
+          if (otherTooltip) {
+            t.classList.remove('active');
+            otherTooltip.style.opacity = '0';
+            otherTooltip.style.visibility = 'hidden';
+            otherTooltip.style.display = '';
+          }
         }
       }
     });
@@ -148,11 +152,17 @@ function initTooltips() {
     // Clear any existing timeout
     if (tooltipTimeout) {
       clearTimeout(tooltipTimeout);
+      tooltipTimeout = null;
     }
     
     // Show this tooltip
     trigger.classList.add('active');
     tooltip.style.display = 'block';
+    // Force visibility with a small delay to ensure display is set first
+    setTimeout(() => {
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'visible';
+    }, 10);
     
     // Auto-hide after 4 seconds
     tooltipTimeout = setTimeout(() => {
@@ -259,18 +269,23 @@ function calculateResults() {
   // Add employee count impact: each tier above 2 (100-500) adds 0.25 hours per manager per week
   // Tier 1 (<100): 0 bonus
   // Tier 2 (100-500): 0 bonus (baseline)
-  // Tier 3 (500-1K): +0.25 hours
-  // Tier 4 (1K-5K): +0.5 hours
-  // Tier 5 (5K+): +0.75 hours
-  const employeeBonusMultiplier = Math.max(0, (calculatorState.employeeCountTier - 2) * 0.25);
+  // Tier 3 (500-1K): +0.25 hours per manager per week
+  // Tier 4 (1K-5K): +0.5 hours per manager per week
+  // Tier 5 (5K+): +0.75 hours per manager per week
+  const employeeCountTier = calculatorState.employeeCountTier || 2;
+  const employeeBonusMultiplier = Math.max(0, (employeeCountTier - 2) * 0.25);
   const employeeBonusHours = calculatorState.managers * employeeBonusMultiplier * WEEKS_PER_MONTH;
   
   const monthlyHoursSaved = baseHoursSaved + employeeBonusHours;
   const monthlyCostSaved = monthlyHoursSaved * calculatorState.hourlyManagerCost;
   
   // Update display
-  hoursSavedResult.textContent = monthlyHoursSaved.toFixed(1);
-  costSavedResult.textContent = formatCurrency(monthlyCostSaved);
+  if (hoursSavedResult) {
+    hoursSavedResult.textContent = monthlyHoursSaved.toFixed(1);
+  }
+  if (costSavedResult) {
+    costSavedResult.textContent = formatCurrency(monthlyCostSaved);
+  }
 }
 
 // Format currency

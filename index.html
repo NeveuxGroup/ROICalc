@@ -126,33 +126,43 @@
                     </div>
                 </div>
 
-                <div class="employee-context-section">
-                    <div class="context-label">Employees receiving messages</div>
-                    <div class="form-group">
-                        <label for="employee-count" class="input-label">
-                            <span class="label-text">Number of employees</span>
-                            <span class="label-value" id="employee-count-value">100-500</span>
-                        </label>
-                        <input 
-                            type="range" 
-                            id="employee-count" 
-                            name="employeeCount" 
-                            min="1" 
-                            max="5" 
-                            value="2" 
-                            step="1"
-                            class="slider"
-                            aria-label="Number of employees receiving messages"
-                        >
-                        <div class="slider-labels">
-                            <span>&lt;100</span>
-                            <span>100-500</span>
-                            <span>500-1K</span>
-                            <span>1K-5K</span>
-                            <span>5K+</span>
-                        </div>
+                <div class="input-group">
+                    <label for="employee-count" class="input-label">
+                        <span class="label-text">
+                            Average number of employees
+                            <button 
+                                type="button" 
+                                class="tooltip-trigger" 
+                                aria-label="How does employee count affect time savings?"
+                                aria-describedby="employee-count-tooltip"
+                                tabindex="0"
+                            >
+                                <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
+                            </button>
+                            <span class="tooltip" id="employee-count-tooltip" role="tooltip">
+                                More employees require more time and planning for communication. Larger teams may see additional time savings as managers spend more time coordinating messages across more people.
+                            </span>
+                        </span>
+                        <span class="label-value" id="employee-count-value">100-500</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="employee-count" 
+                        name="employeeCount" 
+                        min="1" 
+                        max="5" 
+                        value="2" 
+                        step="1"
+                        class="slider"
+                        aria-label="Average number of employees"
+                    >
+                    <div class="slider-labels">
+                        <span>&lt;100</span>
+                        <span>100-500</span>
+                        <span>500-1K</span>
+                        <span>1K-5K</span>
+                        <span>5K+</span>
                     </div>
-                    <p class="context-explanation" id="employee-narrative">Reaching <span id="employee-count-narrative">100-500</span> hourly employees by email/intranet often takes hours or multiple shifts. Text-first reaches most employees within minutes. Larger teams see additional time savings.</p>
                 </div>
             </div>
 
