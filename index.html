@@ -21,18 +21,18 @@
                 <div class="input-group">
                     <label for="managers" class="input-label">
                         <span class="label-text">
-                            Number of managers/admins
+                            The number of managers or admins sending messages
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
-                                aria-label="What does this mean?"
+                                aria-label="Why only managers and admins?"
                                 aria-describedby="managers-tooltip"
                                 tabindex="0"
                             >
                                 <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
                             </button>
                             <span class="tooltip" id="managers-tooltip" role="tooltip">
-                                The number of managers or administrators who send or relay employee communications in your organization
+                                We calculate time savings based on the people who send or relay employee communications (managers and administrators), not total employees. This is because time savings come from reduced follow-ups and repeated reminders when these communicators switch to text-first messaging.
                             </span>
                         </span>
                         <span class="label-value" id="managers-value">5</span>
@@ -46,7 +46,7 @@
                         value="5" 
                         step="1"
                         class="slider"
-                        aria-label="Number of managers or administrators"
+                        aria-label="The number of managers or admins sending messages"
                     >
                     <div class="slider-labels">
                         <span>1</span>
@@ -61,14 +61,14 @@
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
-                                aria-label="How is this calculated?"
+                                aria-label="What is the source for this estimate?"
                                 aria-describedby="hours-saved-tooltip"
                                 tabindex="0"
                             >
                                 <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
                             </button>
                             <span class="tooltip" id="hours-saved-tooltip" role="tooltip">
-                                Based on OurPeople research data, managers save an average of 1 hour per week when switching to text-first communication. This comes from reduced follow-ups, repeated reminders, and clarification time.
+                                Based on McKinsey research on communication efficiency and OurPeople data, managers save an average of 1 hour per week when switching to text-first communication. This conservative estimate comes from reduced follow-ups, repeated reminders, and clarification time. Source: <a href="https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-social-economy" target="_blank" rel="noopener noreferrer" style="color: #FDC212; text-decoration: underline;">McKinsey - The Social Economy</a>
                             </span>
                         </span>
                         <span class="label-value" id="hours-saved-value">1.0</span>
@@ -97,14 +97,14 @@
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
-                                aria-label="What is fully loaded hourly cost?"
+                                aria-label="What is fully loaded hourly cost and why $50?"
                                 aria-describedby="hourly-cost-tooltip"
                                 tabindex="0"
                             >
                                 <span class="tooltip-icon" aria-hidden="true">ℹ️</span>
                             </button>
                             <span class="tooltip" id="hourly-cost-tooltip" role="tooltip">
-                                Fully loaded cost includes salary, benefits, and overhead expenses
+                                Fully loaded cost includes salary, benefits, and overhead expenses for the managers and administrators who send messages. We use $50/hour as a conservative default, which represents a typical mid-level manager's fully loaded cost. Adjust this to match your organization's actual costs for these roles.
                             </span>
                         </span>
                         <span class="label-value" id="hourly-cost-value">$50</span>
@@ -155,11 +155,11 @@
                         <div class="reach-bar-container">
                             <div class="reach-bar-label">
                                 <span>Text-first approach</span>
-                                <span class="reach-percentage improvement">90% <span class="improvement-badge">+200% better</span></span>
+                                <span class="reach-percentage improvement">98% <span class="improvement-badge">+227% better</span></span>
                             </div>
                             <div class="reach-bar">
-                                <div class="reach-bar-fill text-first" style="width: 90%;" data-rate="90%"></div>
-                                <span class="reach-bar-text">90%</span>
+                                <div class="reach-bar-fill text-first" style="width: 98%;" data-rate="98%"></div>
+                                <span class="reach-bar-text">98%</span>
                             </div>
                         </div>
                     </div>
@@ -212,6 +212,10 @@
                 </div>
             </div>
         </section>
+
+        <footer class="legal-disclaimer">
+            <p>This ROI calculator is provided for informational and estimation purposes only. The calculations are based on conservative estimates and industry research, and actual results may vary. OurPeople makes no representations or warranties regarding the accuracy, completeness, or reliability of any calculations or estimates provided. This tool does not constitute financial, legal, or professional advice. Users should consult with appropriate professionals before making any business decisions based on these calculations. OurPeople shall not be liable for any damages, losses, or expenses arising from the use of or reliance on this calculator or its results.</p>
+        </footer>
     </div>
 
     <!-- Modal -->

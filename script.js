@@ -66,7 +66,14 @@ function initTooltips() {
   const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
   
   tooltipTriggers.forEach(trigger => {
-    const tooltip = trigger.querySelector('.tooltip');
+    // Find the tooltip - it's a sibling element, not a child
+    const tooltipId = trigger.getAttribute('aria-describedby');
+    const tooltip = tooltipId ? document.getElementById(tooltipId) : trigger.nextElementSibling;
+    
+    if (!tooltip) {
+      console.warn('Tooltip not found for trigger', trigger);
+      return;
+    }
     
     // Handle click for mobile/touch devices
     trigger.addEventListener('click', function(e) {
