@@ -6,19 +6,10 @@ const WEEKS_PER_MONTH = 4.33;
 const managersSlider = document.getElementById('managers');
 const hoursSavedSlider = document.getElementById('hours-saved');
 const hourlyCostSlider = document.getElementById('hourly-cost');
-const traditionalReachSlider = document.getElementById('traditional-reach');
-const textFirstReachSlider = document.getElementById('textfirst-reach');
 
 const managersValue = document.getElementById('managers-value');
 const hoursSavedValue = document.getElementById('hours-saved-value');
 const hourlyCostValue = document.getElementById('hourly-cost-value');
-const traditionalReachValue = document.getElementById('traditional-reach-value');
-const traditionalReachBar = document.getElementById('traditional-reach-bar');
-const traditionalReachText = document.getElementById('traditional-reach-text');
-const textFirstReachValue = document.getElementById('textfirst-reach-value');
-const textFirstReachBar = document.getElementById('textfirst-reach-bar');
-const textFirstReachText = document.getElementById('textfirst-reach-text');
-const improvementMetrics = document.getElementById('improvement-metrics');
 
 const hoursSavedResult = document.getElementById('hours-saved-result');
 const costSavedResult = document.getElementById('cost-saved-result');
@@ -43,8 +34,7 @@ let calculatorState = {
   managers: 5,
   hoursSavedPerManagerPerWeek: 1.0,
   hourlyManagerCost: 50,
-  traditionalReach: 30,
-  textFirstReach: 90
+  employeeCountTier: 2 // 1=<100, 2=100-500, 3=500-1K, 4=1K-5K, 5=5K+
 };
 
 // Initialize calculator
@@ -57,17 +47,6 @@ function initCalculator() {
   managersSlider.addEventListener('input', handleManagersChange);
   hoursSavedSlider.addEventListener('input', handleHoursSavedChange);
   hourlyCostSlider.addEventListener('input', handleHourlyCostChange);
-  
-  // Reach slider listeners
-  if (traditionalReachSlider) {
-    traditionalReachSlider.addEventListener('input', handleTraditionalReachChange);
-  }
-  if (textFirstReachSlider) {
-    textFirstReachSlider.addEventListener('input', handleTextFirstReachChange);
-  }
-  
-  // Initialize reach display
-  updateReachDisplay();
   
   // Modal handlers
   getStartedBtn.addEventListener('click', openModal);
@@ -99,6 +78,11 @@ function initCalculator() {
     employeeCountSlider.addEventListener('input', handleEmployeeCountChange);
     updateEmployeeCountDisplay();
   }
+  
+  // Initialize employee count display
+  if (employeeCountSlider) {
+    updateEmployeeCountDisplay();
+  }
 }
 
 // Update employee tier display
@@ -122,6 +106,16 @@ function updateEmployeeCountDisplay() {
   employeeCountValue.textContent = tier;
   if (employeeCountNarrative) {
     employeeCountNarrative.textContent = tier.toLowerCase();
+  }
+  
+  // Update calculator state and recalculate
+  calculatorState.employeeCountTier = value;
+  calculateResults();
+  
+  // Update form slider if it exists
+  if (employeesSlider) {
+    employeesSlider.value = value;
+    updateEmployeesValue();
   }
 }
 
@@ -254,65 +248,24 @@ function handleHourlyCostChange(e) {
   calculateResults();
 }
 
-function handleTraditionalReachChange(e) {
-  calculatorState.traditionalReach = parseInt(e.target.value, 10);
-  updateReachDisplay();
-}
-
-function handleTextFirstReachChange(e) {
-  calculatorState.textFirstReach = parseInt(e.target.value, 10);
-  updateReachDisplay();
-}
-
-// Update reach display
-function updateReachDisplay() {
-  if (!traditionalReachValue || !textFirstReachValue) return;
-  
-  const traditional = calculatorState.traditionalReach;
-  const textFirst = calculatorState.textFirstReach;
-  
-  // Update values
-  traditionalReachValue.textContent = `${traditional}%`;
-  textFirstReachValue.textContent = `${textFirst}%`;
-  
-  // Update bars
-  if (traditionalReachBar) {
-    traditionalReachBar.style.width = `${traditional}%`;
-  }
-  if (traditionalReachText) {
-    traditionalReachText.textContent = `${traditional}%`;
-  }
-  if (textFirstReachBar) {
-    textFirstReachBar.style.width = `${textFirst}%`;
-  }
-  if (textFirstReachText) {
-    textFirstReachText.textContent = `${textFirst}%`;
-  }
-  
-  // Calculate and display improvement metrics
-  if (improvementMetrics) {
-    const percentagePoints = textFirst - traditional;
-    const multiplier = (textFirst / traditional).toFixed(1);
-    improvementMetrics.innerHTML = `<span class="improvement-badge">+${percentagePoints} percentage points (${multiplier}x)</span>`;
-  }
-}
-
-// Initialize reach display on page load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(updateReachDisplay, 100);
-  });
-} else {
-  setTimeout(updateReachDisplay, 100);
-}
-
 // Calculate ROI results
 function calculateResults() {
-  const monthlyHoursSaved = 
+  // Base hours saved from managers
+  const baseHoursSaved = 
     calculatorState.managers * 
     calculatorState.hoursSavedPerManagerPerWeek * 
     WEEKS_PER_MONTH;
   
+  // Add employee count impact: each tier above 2 (100-500) adds 0.25 hours per manager per week
+  // Tier 1 (<100): 0 bonus
+  // Tier 2 (100-500): 0 bonus (baseline)
+  // Tier 3 (500-1K): +0.25 hours
+  // Tier 4 (1K-5K): +0.5 hours
+  // Tier 5 (5K+): +0.75 hours
+  const employeeBonusMultiplier = Math.max(0, (calculatorState.employeeCountTier - 2) * 0.25);
+  const employeeBonusHours = calculatorState.managers * employeeBonusMultiplier * WEEKS_PER_MONTH;
+  
+  const monthlyHoursSaved = baseHoursSaved + employeeBonusHours;
   const monthlyCostSaved = monthlyHoursSaved * calculatorState.hourlyManagerCost;
   
   // Update display
@@ -401,7 +354,11 @@ async function handleFormSubmit(e) {
   
   // Map employee slider value to tier
   const employeeTiers = ['<100', '100-500', '500-1K', '1K-5K', '5K+'];
-  const employeeTier = employeeTiers[parseInt(employees, 10) - 1] || '100-500';
+  const employeeTierValue = parseInt(employees, 10);
+  const employeeTier = employeeTiers[employeeTierValue - 1] || '100-500';
+  
+  // Update calculator state with form value
+  calculatorState.employeeCountTier = employeeTierValue;
   
   // Check honeypot (if filled, treat as spam but show success)
   if (website) {
@@ -416,13 +373,15 @@ async function handleFormSubmit(e) {
   submitBtn.textContent = 'Submitting...';
   
   try {
-    // Calculate current results
-    const monthlyHoursSaved = 
+    // Use the current calculator state (which includes employee count impact)
+    const baseHoursSaved = 
       calculatorState.managers * 
       calculatorState.hoursSavedPerManagerPerWeek * 
       WEEKS_PER_MONTH;
-    
-    const monthlyCostSaved = monthlyHoursSaved * calculatorState.hourlyManagerCost;
+    const employeeBonusMultiplier = Math.max(0, (calculatorState.employeeCountTier - 2) * 0.25);
+    const employeeBonusHours = calculatorState.managers * employeeBonusMultiplier * WEEKS_PER_MONTH;
+    const finalMonthlyHoursSaved = baseHoursSaved + employeeBonusHours;
+    const finalMonthlyCostSaved = finalMonthlyHoursSaved * calculatorState.hourlyManagerCost;
     
     // Prepare webhook payload
     const payload = {
@@ -431,11 +390,12 @@ async function handleFormSubmit(e) {
       mobile,
       company,
       employeeTier,
+      employeeCountTier: calculatorState.employeeCountTier,
       managers: calculatorState.managers,
       hoursSavedPerManagerPerWeek: calculatorState.hoursSavedPerManagerPerWeek,
       hourlyManagerCost: calculatorState.hourlyManagerCost,
-      monthlyHoursSaved: parseFloat(monthlyHoursSaved.toFixed(2)),
-      monthlyCostSaved: parseFloat(monthlyCostSaved.toFixed(2)),
+      monthlyHoursSaved: parseFloat(finalMonthlyHoursSaved.toFixed(2)),
+      monthlyCostSaved: parseFloat(finalMonthlyCostSaved.toFixed(2)),
       timestamp: new Date().toISOString(),
       pageUrl: window.location.href
     };

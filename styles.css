@@ -64,13 +64,13 @@ body {
 }
 
 .headline {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
   color: var(--color-navy);
   line-height: 1.3;
   margin: 0;
   letter-spacing: -0.02em;
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
   background: linear-gradient(135deg, rgba(8, 150, 171, 0.05) 0%, rgba(232, 13, 109, 0.05) 100%);
   border-radius: var(--border-radius);
   border: 1px solid rgba(40, 75, 82, 0.08);
@@ -399,23 +399,13 @@ body {
 
 /* Employee Context Section */
 .employee-context-section {
-  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
   padding: var(--spacing-md);
   background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f4 100%);
   border-radius: var(--border-radius);
   border: 1px solid rgba(40, 75, 82, 0.06);
 }
 
-.reach-slider {
-  margin-bottom: var(--spacing-xs);
-}
-
-.improvement-metrics {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  margin-left: var(--spacing-xs);
-}
 
 .reach-comparison {
   display: flex;

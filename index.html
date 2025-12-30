@@ -57,7 +57,7 @@
                 <div class="input-group">
                     <label for="hours-saved" class="input-label">
                         <span class="label-text">
-                            Hours saved per manager per week
+                            Hours saved per manager/admin per week
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
@@ -82,7 +82,7 @@
                         value="1.0" 
                         step="0.1"
                         class="slider"
-                        aria-label="Hours saved per manager per week"
+                        aria-label="Hours saved per manager/admin per week"
                     >
                     <div class="slider-labels">
                         <span>0.5</span>
@@ -93,7 +93,7 @@
                 <div class="input-group">
                     <label for="hourly-cost" class="input-label">
                         <span class="label-text">
-                            Manager hourly cost
+                            Manager/admin hourly cost
                             <button 
                                 type="button" 
                                 class="tooltip-trigger" 
@@ -118,12 +118,41 @@
                         value="50" 
                         step="5"
                         class="slider"
-                        aria-label="Manager hourly cost"
+                        aria-label="Manager/admin hourly cost"
                     >
                     <div class="slider-labels">
                         <span>$20</span>
                         <span>$200</span>
                     </div>
+                </div>
+
+                <div class="employee-context-section">
+                    <div class="context-label">Employees receiving messages</div>
+                    <div class="form-group">
+                        <label for="employee-count" class="input-label">
+                            <span class="label-text">Number of employees</span>
+                            <span class="label-value" id="employee-count-value">100-500</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="employee-count" 
+                            name="employeeCount" 
+                            min="1" 
+                            max="5" 
+                            value="2" 
+                            step="1"
+                            class="slider"
+                            aria-label="Number of employees receiving messages"
+                        >
+                        <div class="slider-labels">
+                            <span>&lt;100</span>
+                            <span>100-500</span>
+                            <span>500-1K</span>
+                            <span>1K-5K</span>
+                            <span>5K+</span>
+                        </div>
+                    </div>
+                    <p class="context-explanation" id="employee-narrative">Reaching <span id="employee-count-narrative">100-500</span> hourly employees by email/intranet often takes hours or multiple shifts. Text-first reaches most employees within minutes. Larger teams see additional time savings.</p>
                 </div>
             </div>
 
@@ -145,79 +174,25 @@
                         <div class="reach-bar-container">
                             <div class="reach-bar-label">
                                 <span>Traditional methods (email, intranet, paper)</span>
-                                <span class="reach-percentage" id="traditional-reach-value">30%</span>
+                                <span class="reach-percentage">30%</span>
                             </div>
-                            <input 
-                                type="range" 
-                                id="traditional-reach" 
-                                name="traditionalReach" 
-                                min="10" 
-                                max="60" 
-                                value="30" 
-                                step="5"
-                                class="slider reach-slider"
-                                aria-label="Traditional methods reach percentage"
-                            >
                             <div class="reach-bar">
-                                <div class="reach-bar-fill" id="traditional-reach-bar" style="width: 30%;"></div>
-                                <span class="reach-bar-text" id="traditional-reach-text">30%</span>
+                                <div class="reach-bar-fill" style="width: 30%;"></div>
+                                <span class="reach-bar-text">30%</span>
                             </div>
                         </div>
                         <div class="reach-bar-container">
                             <div class="reach-bar-label">
-                                <span>Text-first approach</span>
-                                <span class="reach-percentage improvement" id="textfirst-reach-display">
-                                    <span id="textfirst-reach-value">90%</span>
-                                    <span class="improvement-metrics" id="improvement-metrics"></span>
-                                </span>
+                                <span>Text-first approach (OurPeople)</span>
+                                <span class="reach-percentage improvement">90%</span>
                             </div>
-                            <input 
-                                type="range" 
-                                id="textfirst-reach" 
-                                name="textFirstReach" 
-                                min="70" 
-                                max="98" 
-                                value="90" 
-                                step="2"
-                                class="slider reach-slider"
-                                aria-label="Text-first approach reach percentage"
-                            >
                             <div class="reach-bar">
-                                <div class="reach-bar-fill text-first" id="textfirst-reach-bar" style="width: 90%;"></div>
-                                <span class="reach-bar-text" id="textfirst-reach-text">90%</span>
+                                <div class="reach-bar-fill text-first" style="width: 90%;"></div>
+                                <span class="reach-bar-text">90%</span>
                             </div>
                         </div>
                     </div>
                     <p class="context-explanation">Text-first visibility is typically much higher than email/intranet for hourly teams. This is context only and does not affect ROI math.</p>
-                </div>
-
-                <div class="employee-context-section">
-                    <div class="context-label">Employee reach context (not included in ROI calculations)</div>
-                    <div class="form-group">
-                        <label for="employee-count" class="input-label">
-                            <span class="label-text">Employees receiving messages</span>
-                            <span class="label-value" id="employee-count-value">100-500</span>
-                        </label>
-                        <input 
-                            type="range" 
-                            id="employee-count" 
-                            name="employeeCount" 
-                            min="1" 
-                            max="5" 
-                            value="2" 
-                            step="1"
-                            class="slider"
-                            aria-label="Employees receiving messages"
-                        >
-                        <div class="slider-labels">
-                            <span>&lt;100</span>
-                            <span>100-500</span>
-                            <span>500-1K</span>
-                            <span>1K-5K</span>
-                            <span>5K+</span>
-                        </div>
-                    </div>
-                    <p class="context-explanation" id="employee-narrative">Reaching <span id="employee-count-narrative">100-500</span> hourly employees by email/intranet often takes hours or multiple shifts. Text-first reaches most employees within minutes.</p>
                 </div>
 
                 <button class="cta-button" id="get-started-btn" aria-label="Get started with OurPeople">
