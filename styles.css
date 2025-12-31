@@ -664,8 +664,11 @@ body {
 }
 
 .methodology-toggle:focus {
-  outline: 3px solid var(--color-yay-yellow);
-  outline-offset: -3px;
+  outline: none;
+}
+
+.methodology-toggle:focus-visible {
+  outline: none;
 }
 
 .methodology-title {
