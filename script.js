@@ -17,6 +17,7 @@ const costSavedResult = document.getElementById('cost-saved-result');
 const getStartedBtn = document.getElementById('get-started-btn');
 const modalOverlay = document.getElementById('modal-overlay');
 const modalClose = document.getElementById('modal-close');
+const modalTitle = document.getElementById('modal-title');
 const leadForm = document.getElementById('lead-form');
 const formError = document.getElementById('form-error');
 const formSuccess = document.getElementById('form-success');
@@ -345,6 +346,11 @@ function closeModal() {
   formError.classList.remove('show');
   formError.textContent = '';
   formSuccess.style.display = 'none';
+  leadForm.style.display = 'block';
+  // Reset modal title
+  if (modalTitle) {
+    modalTitle.textContent = 'See how this works for your team';
+  }
 }
 
 function handleModalOverlayClick(e) {
@@ -488,6 +494,11 @@ function showError(message) {
 }
 
 function showSuccess() {
+  // Update modal title to "Thank you!"
+  if (modalTitle) {
+    modalTitle.textContent = 'Thank you!';
+  }
+  
   formSuccess.style.display = 'block';
   leadForm.style.display = 'none';
   formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

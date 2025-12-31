@@ -253,6 +253,30 @@ body {
   .tooltip-trigger.active .tooltip {
     transform: translateX(0) translateY(0);
   }
+  
+  /* Mobile modal spacing adjustments */
+  .modal-content {
+    padding: var(--spacing-md);
+    max-height: 95vh;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-md);
+    padding-right: var(--spacing-lg);
+  }
+  
+  .lead-form {
+    gap: var(--spacing-sm);
+  }
+  
+  .form-group {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .form-submit {
+    margin-top: var(--spacing-xs);
+  }
 }
 
 .label-value {
