@@ -105,6 +105,9 @@ function updateEmployeeCountDisplay() {
   
   // Update calculator state and recalculate
   calculatorState.employeeCountTier = value;
+  
+  // Update slider display values to show combined hours (base + bonus)
+  updateSliderValues();
   calculateResults();
   
   // Update form slider if it exists
@@ -235,7 +238,13 @@ function initTooltips() {
 // Update slider display values
 function updateSliderValues() {
   managersValue.textContent = calculatorState.managers;
-  hoursSavedValue.textContent = calculatorState.hoursSavedPerManagerPerWeek.toFixed(1);
+  
+  // Calculate total hours saved per manager per week (base + employee bonus)
+  const employeeCountTier = calculatorState.employeeCountTier || 2;
+  const employeeBonusMultiplier = Math.max(0, (employeeCountTier - 2) * 0.25);
+  const totalHoursPerWeek = calculatorState.hoursSavedPerManagerPerWeek + employeeBonusMultiplier;
+  
+  hoursSavedValue.textContent = totalHoursPerWeek.toFixed(1);
   hourlyCostValue.textContent = `$${calculatorState.hourlyManagerCost}`;
 }
 
