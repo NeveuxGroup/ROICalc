@@ -331,8 +331,12 @@ function formatCurrency(value) {
 function openModal() {
   modalOverlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  // Hide modal title initially
+  if (modalTitle) {
+    modalTitle.classList.remove('show');
+  }
   // Focus first input
-  const firstNameInput = document.getElementById('firstName');
+  const firstNameInput = document.getElementById('fullName');
   if (firstNameInput) {
     setTimeout(() => firstNameInput.focus(), 100);
   }
@@ -347,9 +351,10 @@ function closeModal() {
   formError.textContent = '';
   formSuccess.style.display = 'none';
   leadForm.style.display = 'block';
-  // Reset modal title
+  // Hide modal title
   if (modalTitle) {
-    modalTitle.textContent = 'See how this works for your team';
+    modalTitle.classList.remove('show');
+    modalTitle.textContent = 'Thank you!'; // Keep text for when it shows
   }
 }
 
@@ -494,9 +499,10 @@ function showError(message) {
 }
 
 function showSuccess() {
-  // Update modal title to "Thank you!"
+  // Show and update modal title to "Thank you!"
   if (modalTitle) {
     modalTitle.textContent = 'Thank you!';
+    modalTitle.classList.add('show');
   }
   
   formSuccess.style.display = 'block';
