@@ -233,6 +233,7 @@ body {
   pointer-events: auto;
 }
 
+/* Mobile styles - applies to devices up to 640px wide (includes iPhone) */
 @media (max-width: 640px) {
   .tooltip {
     left: auto;
@@ -256,19 +257,21 @@ body {
   
   /* Mobile modal spacing adjustments - aggressive reduction for submit button visibility */
   .modal-content {
-    padding: 0.5rem 1rem 0.75rem;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
+    padding: 0.5rem 1rem 0.75rem !important;
+    max-height: 85vh !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   
-  .modal-title {
-    font-size: 0.875rem;
-    margin-bottom: 0.375rem;
-    padding-right: 2rem;
-    line-height: 1.2;
+  .modal-content .modal-title,
+  #modal-title {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+    padding-right: 2rem !important;
+    padding-top: 0 !important;
+    line-height: 1.2 !important;
     flex-shrink: 0;
-    font-weight: 600;
+    font-weight: 600 !important;
   }
   
   .lead-form {
@@ -318,11 +321,11 @@ body {
   }
   
   .modal-close {
-    top: 0.5rem;
-    right: 0.5rem;
-    width: 32px;
-    height: 32px;
-    font-size: 1.5rem;
+    top: 0.25rem !important;
+    right: 0.5rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 1.25rem !important;
   }
 }
 
