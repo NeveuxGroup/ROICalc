@@ -30,14 +30,14 @@ const employeeCountValue = document.getElementById('employee-count-value');
 // Calculator State
 let calculatorState = {
   managers: 5,
-  hoursSavedPerManagerPerWeek: 1.0,
+  baseHoursSavedPerManagerPerWeek: 1.0, // Base hours (before employee tier add-on)
   hourlyManagerCost: 50,
-  employeeCountTier: 2 // 1=<100, 2=100-500, 3=500-1K, 4=1K-5K, 5=5K+
+  employeeCountTier: 3 // 1=<100, 2=100-500, 3=500-1K (baseline), 4=1K-5K, 5=5K+
 };
 
 // Initialize calculator state with employee count
 if (employeeCountSlider) {
-  calculatorState.employeeCountTier = parseInt(employeeCountSlider.value, 10) || 2;
+  calculatorState.employeeCountTier = parseInt(employeeCountSlider.value, 10) || 3;
 }
 
 // Initialize calculator
@@ -235,16 +235,25 @@ function initTooltips() {
   });
 }
 
+// Round to nearest 0.25 hours (15 minutes)
+function roundToQuarterHour(hours) {
+  return Math.round(hours * 4) / 4; // Round to nearest 0.25
+}
+
+// Calculate employee tier add-on
+function getEmployeeTierAddon(tier) {
+  // Baseline: Tier 3 (500-1K) = +0.0
+  // Tiers 1-3: +0.0, Tier 4: +0.2, Tier 5: +0.4
+  if (tier <= 3) return 0;
+  return tier === 4 ? 0.2 : 0.4;
+}
+
 // Update slider display values
 function updateSliderValues() {
   managersValue.textContent = calculatorState.managers;
   
-  // Calculate total hours saved per manager per week (base + employee bonus)
-  const employeeCountTier = calculatorState.employeeCountTier || 2;
-  const employeeBonusMultiplier = Math.max(0, (employeeCountTier - 2) * 0.25);
-  const totalHoursPerWeek = calculatorState.hoursSavedPerManagerPerWeek + employeeBonusMultiplier;
-  
-  hoursSavedValue.textContent = totalHoursPerWeek.toFixed(1);
+  // Show BASE hours in slider display (not total)
+  hoursSavedValue.textContent = calculatorState.baseHoursSavedPerManagerPerWeek.toFixed(1);
   hourlyCostValue.textContent = `$${calculatorState.hourlyManagerCost}`;
 }
 
@@ -256,7 +265,7 @@ function handleManagersChange(e) {
 }
 
 function handleHoursSavedChange(e) {
-  calculatorState.hoursSavedPerManagerPerWeek = parseFloat(e.target.value);
+  calculatorState.baseHoursSavedPerManagerPerWeek = parseFloat(e.target.value);
   updateSliderValues();
   calculateResults();
 }
@@ -269,31 +278,29 @@ function handleHourlyCostChange(e) {
 
 // Calculate ROI results
 function calculateResults() {
-  // Base hours saved from managers
-  const baseHoursSaved = 
+  // Calculate total hours per manager/admin per week = base + employee tier add-on
+  const baseHours = calculatorState.baseHoursSavedPerManagerPerWeek;
+  const employeeTierAddon = getEmployeeTierAddon(calculatorState.employeeCountTier || 3);
+  const totalHoursPerManagerPerWeek = baseHours + employeeTierAddon;
+  
+  // Monthly calculation: managers × total hours per manager per week × 4.33 weeks
+  const monthlyHoursSaved = 
     calculatorState.managers * 
-    calculatorState.hoursSavedPerManagerPerWeek * 
+    totalHoursPerManagerPerWeek * 
     WEEKS_PER_MONTH;
   
-  // Add employee count impact: each tier above 2 (100-500) adds 0.25 hours per manager per week
-  // Tier 1 (<100): 0 bonus
-  // Tier 2 (100-500): 0 bonus (baseline)
-  // Tier 3 (500-1K): +0.25 hours per manager per week
-  // Tier 4 (1K-5K): +0.5 hours per manager per week
-  // Tier 5 (5K+): +0.75 hours per manager per week
-  const employeeCountTier = calculatorState.employeeCountTier || 2;
-  const employeeBonusMultiplier = Math.max(0, (employeeCountTier - 2) * 0.25);
-  const employeeBonusHours = calculatorState.managers * employeeBonusMultiplier * WEEKS_PER_MONTH;
+  // Round monthly hours to nearest 0.25 hours (15 minutes)
+  const roundedMonthlyHours = roundToQuarterHour(monthlyHoursSaved);
   
-  const monthlyHoursSaved = baseHoursSaved + employeeBonusHours;
-  const monthlyCostSaved = monthlyHoursSaved * calculatorState.hourlyManagerCost;
+  // Monthly value recovered = rounded hours × hourly cost
+  const monthlyValueRecovered = roundedMonthlyHours * calculatorState.hourlyManagerCost;
   
   // Update display
   if (hoursSavedResult) {
-    hoursSavedResult.textContent = monthlyHoursSaved.toFixed(1);
+    hoursSavedResult.textContent = roundedMonthlyHours.toFixed(1);
   }
   if (costSavedResult) {
-    costSavedResult.textContent = formatCurrency(monthlyCostSaved);
+    costSavedResult.textContent = formatCurrency(monthlyValueRecovered);
   }
 }
 
@@ -398,14 +405,16 @@ async function handleFormSubmit(e) {
   
   try {
     // Use the current calculator state (which includes employee count impact)
-    const baseHoursSaved = 
+    const baseHours = calculatorState.baseHoursSavedPerManagerPerWeek;
+    const employeeTierAddon = getEmployeeTierAddon(calculatorState.employeeCountTier || 3);
+    const totalHoursPerManagerPerWeek = baseHours + employeeTierAddon;
+    
+    const monthlyHoursSaved = 
       calculatorState.managers * 
-      calculatorState.hoursSavedPerManagerPerWeek * 
+      totalHoursPerManagerPerWeek * 
       WEEKS_PER_MONTH;
-    const employeeBonusMultiplier = Math.max(0, (calculatorState.employeeCountTier - 2) * 0.25);
-    const employeeBonusHours = calculatorState.managers * employeeBonusMultiplier * WEEKS_PER_MONTH;
-    const finalMonthlyHoursSaved = baseHoursSaved + employeeBonusHours;
-    const finalMonthlyCostSaved = finalMonthlyHoursSaved * calculatorState.hourlyManagerCost;
+    const roundedMonthlyHours = roundToQuarterHour(monthlyHoursSaved);
+    const finalMonthlyCostSaved = roundedMonthlyHours * calculatorState.hourlyManagerCost;
     
     // Prepare webhook payload
     const payload = {
@@ -416,9 +425,11 @@ async function handleFormSubmit(e) {
       employeeTier,
       employeeCountTier: calculatorState.employeeCountTier,
       managers: calculatorState.managers,
-      hoursSavedPerManagerPerWeek: calculatorState.hoursSavedPerManagerPerWeek,
+      baseHoursSavedPerManagerPerWeek: calculatorState.baseHoursSavedPerManagerPerWeek,
+      employeeTierAddon: employeeTierAddon,
+      totalHoursPerManagerPerWeek: totalHoursPerManagerPerWeek,
       hourlyManagerCost: calculatorState.hourlyManagerCost,
-      monthlyHoursSaved: parseFloat(finalMonthlyHoursSaved.toFixed(2)),
+      monthlyHoursSaved: parseFloat(roundedMonthlyHours.toFixed(2)),
       monthlyCostSaved: parseFloat(finalMonthlyCostSaved.toFixed(2)),
       timestamp: new Date().toISOString(),
       pageUrl: window.location.href
