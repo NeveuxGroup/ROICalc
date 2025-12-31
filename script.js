@@ -70,6 +70,16 @@ function initCalculator() {
     methodologyToggle.addEventListener('click', toggleMethodology);
   }
   
+  // CTA button pulse animation (every 10 seconds)
+  if (getStartedBtn) {
+    setInterval(() => {
+      getStartedBtn.classList.add('pulse-animation');
+      setTimeout(() => {
+        getStartedBtn.classList.remove('pulse-animation');
+      }, 1000); // Animation duration matches hover transition
+    }, 10000); // Every 10 seconds
+  }
+  
   // Employee slider handler (form)
   if (employeesSlider && employeesValue) {
     employeesSlider.addEventListener('input', handleEmployeesChange);
@@ -252,8 +262,12 @@ function getEmployeeTierAddon(tier) {
 function updateSliderValues() {
   managersValue.textContent = calculatorState.managers;
   
-  // Show BASE hours in slider display (not total)
-  hoursSavedValue.textContent = calculatorState.baseHoursSavedPerManagerPerWeek.toFixed(1);
+  // Show TOTAL hours (base + employee tier add-on) in slider display
+  const baseHours = calculatorState.baseHoursSavedPerManagerPerWeek;
+  const employeeTierAddon = getEmployeeTierAddon(calculatorState.employeeCountTier || 3);
+  const totalHoursPerWeek = baseHours + employeeTierAddon;
+  
+  hoursSavedValue.textContent = totalHoursPerWeek.toFixed(1);
   hourlyCostValue.textContent = `$${calculatorState.hourlyManagerCost}`;
 }
 

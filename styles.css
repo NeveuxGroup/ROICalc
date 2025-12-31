@@ -519,8 +519,15 @@ body {
   transform: translateY(-2px);
 }
 
-.cta-button:hover::before {
+.cta-button:hover::before,
+.cta-button.pulse-animation::before {
   left: 100%;
+}
+
+.cta-button.pulse-animation {
+  background: linear-gradient(135deg, #c00a5a 0%, #a0084a 100%);
+  box-shadow: 0 6px 20px rgba(232, 13, 109, 0.4);
+  transform: translateY(-2px);
 }
 
 .cta-button:active {
