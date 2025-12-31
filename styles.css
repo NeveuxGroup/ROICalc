@@ -483,7 +483,8 @@ body {
 
 /* Context Section */
 .context-section {
-  margin-bottom: var(--spacing-lg);
+  max-width: 900px;
+  margin: 0 auto var(--spacing-xl);
   padding: var(--spacing-md);
   background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f4 100%);
   border-radius: var(--border-radius);
