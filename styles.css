@@ -356,6 +356,20 @@ body {
     height: 28px !important;
     font-size: 1.25rem !important;
   }
+  
+  .calculator-results {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .results-section {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .cta-button {
+    width: 100% !important;
+    align-self: stretch !important;
+  }
 }
 
 .label-value {
@@ -1042,11 +1056,24 @@ body {
     padding-left: var(--spacing-lg);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: var(--spacing-md);
+    min-height: 100%;
   }
   
   .results-section {
     margin-bottom: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .cta-button {
+    width: auto;
+    align-self: flex-end;
+    margin-top: auto;
+    padding: var(--spacing-md) var(--spacing-xl);
   }
   
   .context-section,
